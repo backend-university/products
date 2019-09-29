@@ -1,3 +1,3 @@
-# Project Products
+# Продукты BU
 
-This repository is a repository of information on the products of the Backend-University project.
+Этот репозиторий является хранилищем информации о продуктах проекта Backend-University.
