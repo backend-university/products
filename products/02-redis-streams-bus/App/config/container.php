@@ -24,8 +24,7 @@ const CONTAINER_REDIS_STREAM_RECEIVER_SECRET = 'containerRedisReceiverSecret';
 const CONTAINER_REDIS_STREAM_RECEIVER_LOG = 'containerRedisReceiverLog';
 const CONTAINER_REDIS_STREAM_CONNECTION_SECRET = 'containerRedisStreamConnectionSecret';
 const CONTAINER_REDIS_STREAM_CONNECTION_LOG = 'containerRedisStreamConnectionLog';
-const CONTAINER_REDIS_STREAM_BUS_SECRET = 'containerRedisStreamBusSecret';
-const CONTAINER_REDIS_STREAM_BUS_LOG = 'containerRedisStreamBusLog';
+const CONTAINER_REDIS_STREAM_BUS = 'containerRedisStreamBus';
 const CONTAINER_EVENT_DISPATCHER = 'containerEventDispatcher';
 
 return new Container(
@@ -59,17 +58,10 @@ return new Container(
                 $c->get(CONTAINER_SERIALIZER)
             );
         },
-        CONTAINER_REDIS_STREAM_BUS_SECRET => function (ContainerInterface $c) {
+        CONTAINER_REDIS_STREAM_BUS => function (ContainerInterface $c) {
             $sendersLocator = new SendersLocator([
-                '*' => [CONTAINER_REDIS_TRANSPORT_SECRET]
-            ], $c);
-            $middleware[] = new SendMessageMiddleware($sendersLocator);
-
-            return new MessageBus($middleware);
-        },
-        CONTAINER_REDIS_STREAM_BUS_LOG => function (ContainerInterface $c) {
-            $sendersLocator = new SendersLocator([
-                '*' => [CONTAINER_REDIS_TRANSPORT_LOG]
+                \App\Messages\SecretJsonMessages::class => [CONTAINER_REDIS_TRANSPORT_SECRET],
+                \App\Messages\DaemonLogMessage::class => [CONTAINER_REDIS_TRANSPORT_LOG],
             ], $c);
             $middleware[] = new SendMessageMiddleware($sendersLocator);
 
