@@ -1,0 +1,47 @@
+version: '3.1'
+
+services:
+  php-publisher-1:
+    container_name: "bu-02-pub-1"
+    build: "./docker/php"
+    volumes:
+      - ./:/app
+    working_dir: /app
+    entrypoint: ["php", "App/publisher1.php"]
+    depends_on:
+      - redis
+      - composer
+  php-consumer-1:
+    container_name: "bu-02-cons-1"
+    build: "./docker/php"
+    volumes:
+      - ./:/app
+    working_dir: /app
+    entrypoint: ["php", "App/consumer1.php"]
+    depends_on:
+      - redis
+      - composer
+  php-consumer-2:
+    container_name: "bu-02-cons-2"
+    build: "./docker/php"
+    volumes:
+      - ./:/app
+    working_dir: /app
+    entrypoint: ["php", "App/consumer2.php"]
+    depends_on:
+      - redis
+      - composer
+  redis:
+    image: redis:5.0.5-alpine
+    container_name: bu-02-redis
+    volumes:
+      - ./data/redis:/data
+  composer:
+    image: composer:latest
+    container_name: bu-02-composer
+    working_dir: /app
+    volumes:
+      - ./:/app
+    command: "composer install"
+    depends_on:
+      - redis
